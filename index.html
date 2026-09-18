@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BreachDrill — Core Product Framework</title>
+<meta name="description" content="BreachDrill trains Australian secondary students to recognise and respond to digital scams through realistic practice, not lectures.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='M24 3 6 9v13c0 11 7.5 18.5 18 23 10.5-4.5 18-12 18-23V9L24 3Z' fill='%231E66F0'/%3E%3Cpath d='M24 8 11 12.5V22c0 8.5 5.5 14.5 13 18 7.5-3.5 13-9.5 13-18v-9.5L24 8Z' fill='%234B8BFF'/%3E%3Cpath d='m17 24.5 5 5 10-11' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Sora:wght@400;600;700;800&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+<style>
+/* ============================================================
+   BREACHDRILL · CORE PRODUCT FRAMEWORK — single-file page
+   Bright blue/white system, aligned to the product UI.
+   ============================================================ */
+:root{
+  --blue:#1E66F0; --blue-dark:#174FC4; --blue-deep:#0E2A6B;
+  --navy:#0F2144; --ink:#3E4D68; --ink-soft:#66758F;
+  --bg:#FFFFFF; --bg-soft:#F3F7FF; --band:#EAF2FE; --line:#DCE7F8;
+  --amber:#F08A1E; --purple:#7A5AF8; --teal:#0BA6A6; --red:#E2484E; --green:#15A35B; --pink:#E0449B;
+  --radius:18px;
+  --shadow-card:0 10px 30px -14px rgba(20,46,110,.18);
+  --shadow-shot:0 30px 70px -30px rgba(20,62,170,.40);
+  --font-display:"Sora", "Segoe UI", system-ui, sans-serif;
+  --font-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-body); color:var(--ink); background:var(--bg);
+  font-size:17px; line-height:1.62; -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:var(--font-display); color:var(--navy); line-height:1.18; font-weight:700; letter-spacing:-.01em}
+p{max-width:64ch}
+a{color:var(--blue); text-decoration:none}
+img{display:block;max-width:100%}
+.wrap{width:min(1160px, calc(100% - 48px)); margin:0 auto}
+.eyebrow{
+  font-family:var(--font-display); font-weight:700; font-size:.78rem; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--blue); display:inline-flex; align-items:center; gap:8px;
+}
+.eyebrow::before{content:""; width:22px; height:2px; background:var(--blue); border-radius:2px}
+.section{padding:96px 0}
+.section h2{font-size:clamp(1.7rem, 3.2vw, 2.5rem); margin:14px 0 16px}
+.section .lead{font-size:1.12rem; color:var(--ink-soft)}
+.muted{color:var(--ink-soft)}
+.tnum{font-feature-settings:"tnum"}
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex; align-items:center; gap:9px; font-family:var(--font-display);
+  font-weight:600; font-size:.96rem; padding:13px 24px; border-radius:999px;
+  border:1.5px solid transparent; cursor:pointer; transition:transform .18s cubic-bezier(.22,1,.36,1), box-shadow .18s, background .18s;
+}
+.btn-primary{background:var(--blue); color:#fff; box-shadow:0 12px 26px -10px rgba(30,102,240,.55)}
+.btn-primary:hover{background:var(--blue-dark); transform:translateY(-2px)}
+.btn-ghost{background:#fff; color:var(--blue-deep); border-color:var(--line)}
+.btn-ghost:hover{border-color:var(--blue); transform:translateY(-2px)}
+.btn svg{width:17px;height:17px}
+:focus-visible{outline:2.5px solid var(--blue); outline-offset:3px; border-radius:6px}
+
+/* ---------- top nav ---------- */
+.nav{
+  position:sticky; top:0; z-index:50; background:rgba(255,255,255,.86);
+  backdrop-filter:blur(12px); border-bottom:1px solid var(--line);
+}
+.nav-inner{display:flex; align-items:center; justify-content:space-between; height:66px}
+.brand{display:flex; align-items:center; gap:11px; font-family:var(--font-display); font-weight:800; font-size:1.18rem; color:var(--navy)}
+.brand svg{width:34px;height:38px}
+.brand span{color:var(--blue)}
+.nav-links{display:flex; align-items:center; gap:30px}
+.nav-links a{color:var(--ink); font-weight:600; font-size:.95rem; font-family:var(--font-display)}
+.nav-links a:hover{color:var(--blue)}
+.nav-cta{font-size:.9rem; padding:10px 18px}
+@media(max-width:860px){ .nav-links a:not(.btn){display:none} }
+
+/* ---------- hero ---------- */
+.hero{
+  position:relative; overflow:hidden;
+  background:
+    radial-gradient(900px 460px at 82% -8%, rgba(30,102,240,.13), transparent 62%),
+    radial-gradient(700px 420px at -8% 18%, rgba(11,166,166,.08), transparent 60%),
+    linear-gradient(180deg,#F6FAFF 0%, #FFFFFF 78%);
+}
+.hero::before{
+  content:""; position:absolute; inset:0; opacity:.55; pointer-events:none;
+  background-image:radial-gradient(rgba(30,102,240,.16) 1.2px, transparent 1.2px);
+  background-size:26px 26px;
+  -webkit-mask-image:linear-gradient(180deg,#000 0%, transparent 72%);
+          mask-image:linear-gradient(180deg,#000 0%, transparent 72%);
+}
+.hero-inner{position:relative; display:grid; grid-template-columns:1.05fr .95fr; gap:56px; align-items:center; padding:84px 0 92px}
+.hero-tag{font-size:.9rem; color:var(--blue-deep); font-weight:600; background:#E7F0FF; border:1px solid #CFE0FF; padding:7px 15px; border-radius:999px; display:inline-block}
+.hero h1{font-size:clamp(2.5rem, 5.2vw, 4rem); font-weight:800; margin:20px 0 18px; text-wrap:balance}
+.hero h1 em{font-style:normal; color:var(--blue)}
+.hero p.sub{font-size:1.16rem; color:var(--ink)}
+.mantra{display:flex; gap:12px; margin:28px 0 32px; flex-wrap:wrap}
+.mantra span{
+  font-family:var(--font-display); font-weight:700; font-size:.95rem; padding:9px 18px;
+  border-radius:999px; background:#fff; border:1.5px solid var(--line); display:inline-flex; gap:8px; align-items:center;
+  box-shadow:var(--shadow-card);
+}
+.mantra span i{width:8px;height:8px;border-radius:50%; display:inline-block}
+.mantra .m1 i{background:var(--blue)} .mantra .m2 i{background:var(--teal)} .mantra .m3 i{background:var(--amber)}
+.hero-actions{display:flex; gap:14px; flex-wrap:wrap; align-items:center}
+.hero-note{font-size:.82rem; color:var(--ink-soft); margin-top:14px}
+
+/* hero visual: stacked product shots */
+.hero-visual{position:relative}
+.hero-frame{border-radius:16px; overflow:hidden; border:1px solid var(--line); box-shadow:var(--shadow-shot); background:#fff; transform:rotate(.6deg)}
+.hero-float{
+  position:absolute; left:-34px; bottom:-26px; background:#fff; border:1px solid var(--line);
+  border-radius:14px; padding:13px 17px; box-shadow:0 22px 50px -18px rgba(20,62,170,.45);
+  display:flex; gap:12px; align-items:center; max-width:290px;
+}
+.hero-float .dot{width:34px;height:34px;border-radius:50%; background:#E6F7EE; color:var(--green); display:grid;place-items:center;flex:none}
+.hero-float strong{font-family:var(--font-display); font-size:.86rem; color:var(--navy); display:block; line-height:1.3}
+.hero-float small{font-size:.76rem; color:var(--ink-soft)}
+.float-anim{animation:floaty 7s ease-in-out infinite}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-11px)}}
+
+/* browser frame chrome (reused) */
+.shot{border-radius:14px; overflow:hidden; border:1px solid var(--line); background:#fff; box-shadow:var(--shadow-shot)}
+.shot-bar{height:38px; background:#F5F8FF; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:8px; padding:0 13px}
+.shot-bar i{width:10px;height:10px;border-radius:50%; background:#D2E0FA; display:block}
+.shot-bar u{margin-left:8px; text-decoration:none; font-size:.74rem; color:var(--ink-soft); background:#fff; border:1px solid var(--line);
+  border-radius:7px; padding:3px 12px; flex:1; max-width:300px; white-space:nowrap; overflow:hidden}
+.shot img{width:100%}
+
+/* ---------- problem band ---------- */
+.problem{background:var(--band); border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
+.problem-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; margin-top:44px}
+.stat{background:#fff; padding:28px 24px 24px}
+.stat .num{font-family:var(--font-display); font-weight:800; font-size:2.35rem; color:var(--blue-deep); letter-spacing:-.02em; line-height:1}
+.stat .num.down{color:var(--red)}
+.stat .lab{font-weight:700; color:var(--navy); margin:10px 0 5px; font-size:1rem; line-height:1.35}
+.stat .src{font-size:.78rem; color:var(--ink-soft)}
+.problem-quote{margin-top:34px; padding:22px 28px; background:#fff; border-left:4px solid var(--blue); border-radius:0 14px 14px 0; font-size:1.08rem; color:var(--navy)}
+.problem-quote span{color:var(--ink-soft); font-size:.95rem}
+@media(max-width:900px){ .problem-grid{grid-template-columns:repeat(2,1fr)} }
+@media(max-width:520px){ .problem-grid{grid-template-columns:1fr} }
+
+/* ---------- core framework (signature) ---------- */
+.framework{background:linear-gradient(180deg,#FFFFFF, #F5F9FF)}
+.fw-loop{
+  display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap;
+  margin:8px auto 0; font-family:var(--font-display); font-weight:600; color:var(--blue-deep); font-size:.95rem;
+}
+.fw-loop .loop-pill{background:#E7F0FF; border:1px solid #C9DCFF; border-radius:999px; padding:7px 17px}
+.fw-loop .loop-arrow{color:var(--blue); font-weight:700}
+.fw-stage{position:relative; display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-top:46px}
+.fw-connector{position:absolute; top:54px; left:16%; right:16%; height:3px; z-index:0}
+.fw-connector::before{content:""; position:absolute; inset:0; background:var(--line); border-radius:3px}
+.fw-connector::after{
+  content:""; position:absolute; inset:0; border-radius:3px;
+  background:linear-gradient(90deg,var(--amber),var(--teal),var(--blue));
+  transform:scaleX(0); transform-origin:left;
+}
+.framework.in .fw-connector::after{transform:scaleX(1); transition:transform 1.1s cubic-bezier(.22,1,.36,1) .35s}
+.pillar{
+  position:relative; z-index:1; background:#fff; border:1.5px solid var(--line); border-radius:var(--radius);
+  padding:30px 26px 26px; box-shadow:var(--shadow-card);
+  transform:translateY(34px); opacity:0;
+}
+.framework.in .pillar{transform:translateY(0); opacity:1; transition:transform .6s cubic-bezier(.22,1,.36,1), opacity .6s}
+.framework.in .pillar:nth-child(2){transition-delay:.14s}
+.framework.in .pillar:nth-child(3){transition-delay:.28s}
+.pillar:hover{transform:translateY(-5px); border-color:#B9CFFB}
+.pillar .phase{font-family:var(--font-display); font-size:.74rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase}
+.pillar .pico{width:58px;height:58px;border-radius:16px; display:grid;place-items:center; margin-bottom:16px}
+.pillar .pico svg{width:29px;height:29px}
+.pillar h3{font-size:1.28rem; margin:2px 0 4px}
+.pillar .when{font-size:.86rem; font-weight:600; margin-bottom:12px}
+.pillar p{font-size:.95rem; color:var(--ink-soft)}
+.pillar ul{list-style:none; margin-top:14px; display:grid; gap:8px}
+.pillar li{font-size:.91rem; padding-left:24px; position:relative; color:var(--ink)}
+.pillar li::before{content:""; position:absolute; left:0; top:7px; width:13px;height:13px; border-radius:50%;
+  background:var(--pbg); -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M20 6 9 17l-5-5' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;
+          mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M20 6 9 17l-5-5' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat}
+.p1{--pc:var(--amber);--pbg:#FCEFDc}.p1 .pico{background:#FDF1E0}.p1 .phase,.p1 .when{color:var(--amber)}
+.p2{--pc:var(--teal);--pbg:#DDF3F2}.p2 .pico{background:#DDF3F2}.p2 .phase,.p2 .when{color:var(--teal)}
+.p3{--pc:var(--blue);--pbg:#DFE9FE}.p3 .pico{background:#DFE9FE}.p3 .phase,.p3 .when{color:var(--blue)}
+.fw-foundation{
+  margin-top:22px; background:var(--navy); border-radius:var(--radius); color:#DCE7FF;
+  display:flex; gap:18px; align-items:center; padding:22px 28px;
+  transform:scaleY(0); transform-origin:top;
+}
+.framework.in .fw-foundation{transform:scaleY(1); transition:transform .55s cubic-bezier(.22,1,.36,1) .55s}
+.fw-foundation svg{width:34px;height:34px;flex:none;color:#8FB4FF}
+.fw-foundation strong{color:#fff; font-family:var(--font-display); font-size:1.02rem; display:block}
+.fw-foundation p{font-size:.9rem; color:#B9CCF2; margin:0}
+@media(max-width:880px){
+  .fw-stage{grid-template-columns:1fr}
+  .fw-connector{display:none}
+  .framework.in .pillar:nth-child(2),.framework.in .pillar:nth-child(3){transition-delay:0s}
+}
+
+/* ---------- personalisation strip ---------- */
+.persona-band{background:#fff}
+.persona-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:38px}
+.persona{border:1.5px solid var(--line); border-radius:16px; padding:20px; background:var(--bg-soft); transition:transform .2s, border-color .2s}
+.persona:hover{transform:translateY(-4px); border-color:#B9CFFB}
+.persona .idx{font-family:var(--font-display); font-weight:800; font-size:.82rem; letter-spacing:.08em}
+.persona h4{font-size:1.06rem; margin:7px 0 5px}
+.persona p{font-size:.87rem; color:var(--ink-soft); margin:0}
+.persona small{display:block; margin-top:11px; font-weight:700; font-size:.78rem; color:var(--blue-deep)}
+.persona:nth-child(1) .idx{color:var(--teal)} .persona:nth-child(2) .idx{color:var(--purple)}
+.persona:nth-child(3) .idx{color:var(--pink)} .persona:nth-child(4) .idx{color:var(--blue)}
+@media(max-width:900px){.persona-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.persona-grid{grid-template-columns:1fr}}
+
+/* ---------- feature walkthrough ---------- */
+.features{background:var(--bg-soft)}
+.feature{display:grid; grid-template-columns:1fr 1.08fr; gap:56px; align-items:center; padding:58px 0; border-top:1px dashed #CFE0FA}
+.feature:first-of-type{border-top:none; padding-top:18px}
+.feature.reverse .f-text{order:2}
+.f-tag{display:inline-flex; align-items:center; gap:8px; font-family:var(--font-display); font-weight:700; font-size:.78rem;
+  letter-spacing:.1em; text-transform:uppercase; padding:6px 14px; border-radius:999px}
+.f-tag svg{width:15px;height:15px}
+.f-text h3{font-size:1.55rem; margin:15px 0 12px}
+.f-text > p{color:var(--ink-soft); font-size:1.02rem}
+.f-list{list-style:none; margin-top:20px; display:grid; gap:13px}
+.f-list li{display:flex; gap:12px; font-size:.96rem; align-items:flex-start}
+.f-list .tick{flex:none; width:21px;height:21px;border-radius:50%; display:grid;place-items:center; margin-top:2px}
+.f-list .tick svg{width:12px;height:12px; color:#fff}
+.f-list strong{color:var(--navy)}
+.f-shots{position:relative}
+.f-shots .shot.main{position:relative; z-index:2}
+.f-shots .shot.sub{position:absolute; z-index:3; right:-14px; bottom:-38px; width:62%; border-radius:12px;
+  box-shadow:0 26px 60px -20px rgba(20,62,170,.5)}
+.f-shots .shot.sub.left{right:auto; left:-14px}
+.f-shots.pair{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+.f-shots.pair .shot{position:static; width:100%}
+.f-caption{font-size:.8rem; color:var(--ink-soft); margin-top:12px; text-align:center}
+@media(max-width:920px){
+  .feature,.feature.reverse{grid-template-columns:1fr; gap:34px}
+  .feature.reverse .f-text{order:0}
+  .f-shots .shot.sub{position:static; width:100%; margin-top:16px}
+}
+@media(max-width:940px){
+  .hero-inner{grid-template-columns:1fr; gap:42px; padding:60px 0 72px}
+  .hero-visual{margin-bottom:34px}
+  .hero-float{left:12px; bottom:-26px; max-width:262px}
+  .brand{min-height:44px}
+}
+@media(max-width:560px){
+  .section{padding:68px 0}
+  .pillar .phase{font-size:.78rem}
+  .hero-note{font-size:.86rem}
+  .f-shots.pair{grid-template-columns:1fr}
+}
+
+/* verdict chips in copy */
+.verdict{display:inline-flex; align-items:center; gap:7px; font-family:var(--font-display); font-weight:700; font-size:.8rem;
+  padding:4px 12px; border-radius:999px; margin:2px 4px 2px 0}
+.verdict.good{background:#E5F7EC; color:var(--green)}
+.verdict.risk{background:#FDECEC; color:var(--red)}
+
+/* ---------- evidence pipeline ---------- */
+.pipeline{display:grid; grid-template-columns:repeat(5,1fr); gap:0; margin-top:48px; align-items:stretch}
+.node{position:relative; padding:0 14px; text-align:center; opacity:.35}
+.evidence.in .node{opacity:1; transition:opacity .4s ease}
+.evidence.in .node:nth-child(1){transition-delay:.05s}.evidence.in .node:nth-child(2){transition-delay:.25s}
+.evidence.in .node:nth-child(3){transition-delay:.45s}.evidence.in .node:nth-child(4){transition-delay:.65s}
+.evidence.in .node:nth-child(5){transition-delay:.85s}
+.node .nico{width:62px;height:62px; border-radius:18px; background:#fff; border:1.5px solid #C4D6FA; margin:0 auto 14px;
+  display:grid;place-items:center; color:var(--blue); box-shadow:var(--shadow-card); position:relative; z-index:2}
+.node .nico svg{width:28px;height:28px}
+.node h4{font-size:1rem; margin-bottom:5px}
+.node p{font-size:.84rem; color:var(--ink-soft); margin:0 auto; max-width:21ch}
+.node::after{content:""; position:absolute; top:31px; left:calc(50% + 38px); width:calc(100% - 76px); height:2px; background:var(--line); z-index:1}
+.node:last-child::after{display:none}
+.evidence.in .node::after{background:linear-gradient(90deg,var(--blue),#9CC0FF); transition:background .5s}
+.gate{margin-top:44px; background:#fff; border:1.5px dashed #A9C4F7; border-radius:var(--radius); padding:22px 28px;
+  display:flex; gap:16px; align-items:flex-start}
+.gate svg{width:27px;height:27px; flex:none; color:var(--blue); margin-top:2px}
+.gate strong{font-family:var(--font-display); color:var(--navy); display:block; margin-bottom:3px}
+.gate p{font-size:.93rem; color:var(--ink-soft); margin:0}
+.tech-row{display:flex; flex-wrap:wrap; gap:10px; margin-top:26px}
+.tech-chip{font-family:var(--font-display); font-size:.84rem; font-weight:600; color:var(--blue-deep); background:#E7F0FF;
+  border:1px solid #C9DCFF; border-radius:999px; padding:7px 15px}
+@media(max-width:900px){
+  .pipeline{grid-template-columns:1fr; gap:22px}
+  .node::after{display:none}
+}
+
+/* ---------- impact ---------- */
+.impact{background:linear-gradient(180deg,#F5F9FF,#FFFFFF)}
+.impact-grid{display:grid; grid-template-columns:1.15fr .85fr; gap:52px; align-items:center; margin-top:44px}
+.chart-card{background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:26px 28px 18px; box-shadow:var(--shadow-card)}
+.chart-card h4{font-size:1.02rem}
+.chart-card .cap{font-size:.82rem; color:var(--ink-soft); margin:2px 0 14px}
+.chart-svg{width:100%; height:auto}
+.chart-line{fill:none; stroke:var(--blue); stroke-width:3.5; stroke-linecap:round; stroke-linejoin:round;
+  stroke-dasharray:900; stroke-dashoffset:900}
+.impact.in .chart-line{animation:draw 1.8s cubic-bezier(.22,1,.36,1) .2s forwards}
+.chart-area{fill:url(#areaGrad); opacity:0}
+.impact.in .chart-area{animation:fadein .8s ease 1.2s forwards}
+.chart-dot{opacity:0}
+.impact.in .chart-dot{animation:fadein .4s ease 1.9s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes fadein{to{opacity:1}}
+.outcome-list{display:grid; gap:16px}
+.outcome{display:flex; gap:15px; background:#fff; border:1px solid var(--line); border-radius:15px; padding:19px 21px; box-shadow:var(--shadow-card)}
+.outcome .obadge{flex:none; width:42px;height:42px;border-radius:12px; display:grid;place-items:center}
+.outcome .obadge svg{width:21px;height:21px}
+.outcome h4{font-size:1.04rem; margin-bottom:3px}
+.outcome p{font-size:.9rem; color:var(--ink-soft); margin:0}
+.impact-counts{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:40px}
+.icount{background:var(--navy); border-radius:15px; padding:22px 18px; text-align:center; color:#DCE7FF}
+.icount .n{font-family:var(--font-display); font-weight:800; font-size:1.9rem; color:#fff; display:block; line-height:1.1}
+.icount .l{font-size:.8rem; color:#AFC4EE; margin-top:5px; display:block; line-height:1.35}
+.sdg-row{display:flex; gap:14px; margin-top:26px; flex-wrap:wrap}
+.sdg{display:flex; gap:12px; align-items:center; background:#fff; border:1px solid var(--line); border-radius:13px; padding:13px 18px; flex:1; min-width:280px}
+.sdg b{font-family:var(--font-display); font-size:.9rem; color:var(--navy); display:block}
+.sdg span{font-size:.83rem; color:var(--ink-soft)}
+.sdg .badge{flex:none; width:46px;height:46px;border-radius:11px; display:grid;place-items:center; color:#fff; font-family:var(--font-display); font-weight:800; font-size:1.05rem}
+.sdg:nth-child(1) .badge{background:#419F46}.sdg:nth-child(2) .badge{background:#F38E2B}
+@media(max-width:920px){.impact-grid{grid-template-columns:1fr; gap:36px}.impact-counts{grid-template-columns:repeat(2,1fr)}}
+
+/* ---------- footer ---------- */
+.footer{background:var(--navy); color:#B9CCF2; padding:64px 0 40px; margin-top:0}
+.footer-top{display:flex; justify-content:space-between; gap:40px; flex-wrap:wrap; align-items:flex-start}
+.footer h3{color:#fff; font-size:1.5rem; margin-bottom:10px}
+.footer p{font-size:.95rem; max-width:46ch}
+.footer .btn-primary{margin-top:18px}
+.footer-tags{display:flex; gap:8px; flex-wrap:wrap; margin-top:18px; max-width:520px}
+.footer-tags span{font-size:.76rem; border:1px solid #2E4478; color:#9FB8E8; border-radius:999px; padding:4px 12px}
+.footer-meta{border-top:1px solid #243A6E; margin-top:44px; padding-top:22px; font-size:.82rem; display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap}
+.footer-meta a{color:#9FB8E8}
+
+/* ---------- reveal utility ---------- */
+.rv{opacity:0; transform:translateY(26px); transition:opacity .6s cubic-bezier(.22,1,.36,1), transform .6s cubic-bezier(.22,1,.36,1)}
+.rv.in{opacity:1; transform:none}
+.hero .rv{opacity:0; transform:translateY(22px)}
+body.loaded .hero .rv{opacity:1; transform:none; transition:opacity .6s cubic-bezier(.22,1,.36,1), transform .6s cubic-bezier(.22,1,.36,1)}
+body.loaded .hero .rv.d1{transition-delay:.08s} body.loaded .hero .rv.d2{transition-delay:.18s}
+body.loaded .hero .rv.d3{transition-delay:.3s} body.loaded .hero .rv.d4{transition-delay:.42s}
+body.loaded .hero .rv.d5{transition-delay:.56s}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none !important; transition:none !important}
+  .rv,.pillar,.hero .rv{opacity:1 !important; transform:none !important}
+  .fw-foundation{transform:none !important}
+  .chart-line{stroke-dashoffset:0 !important}
+  .chart-area,.chart-dot{opacity:1 !important}
+  .node{opacity:1 !important}
+}
+</style>
+</head>
+<body>
+<!-- ===== NAV ===== -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top" aria-label="BreachDrill home">
+      <svg viewBox="0 0 48 54" aria-hidden="true"><path d="M24 2 5 8.2V22.5C5 34.8 12.8 43 24 48c11.2-5 19-13.2 19-25.5V8.2L24 2Z" fill="#1E66F0"/><path d="M24 7.5 10.5 12v10.4c0 9 5.8 15.4 13.5 19 7.7-3.6 13.5-10 13.5-19V12L24 7.5Z" fill="#4B8BFF"/><path d="m16.5 27.5 5.2 5.2L32 21.6" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Breach<span>Drill</span>
+    </a>
+    <nav class="nav-links" aria-label="Page sections">
+      <a href="#framework">Framework</a>
+      <a href="#features">Features</a>
+      <a href="#evidence">Evidence engine</a>
+      <a href="#impact">Impact</a>
+      <a class="btn btn-primary nav-cta" href="https://breachdrill-site.onrender.com/home" target="_blank" rel="noopener">Open live app
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="top">
+  <div class="wrap hero-inner">
+    <div>
+      <span class="hero-tag rv d1">Cyber-safety education · Australian secondary students, 15–18</span>
+      <h1 class="rv d2">Practise today.<br><em>Stay safer tomorrow.</em></h1>
+      <p class="sub rv d3">BreachDrill trains students to <strong>recognise and respond to digital scams</strong> through realistic practice, not lectures — one safe, judgement-free decision at a time.</p>
+      <div class="mantra rv d4" aria-label="Core behaviour model">
+        <span class="m1"><i></i>Pause.</span>
+        <span class="m2"><i></i>Verify.</span>
+        <span class="m3"><i></i>Report.</span>
+      </div>
+      <div class="hero-actions rv d5">
+        <a class="btn btn-primary" href="#framework">Explore the framework
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+        </a>
+        <a class="btn btn-ghost" href="#features">See the features</a>
+      </div>
+      <p class="hero-note rv d5">Built by Team CypherHacks · FIT5120 Industry Experience, Monash University</p>
+    </div>
+    <div class="hero-visual rv d3">
+      <div class="hero-frame">
+        <div class="shot-bar"><i></i><i></i><i></i><u>breachdrill-site.onrender.com/home</u></div>
+        <img src="assets/home.png" alt="BreachDrill home practice space showing the four activity cards" loading="eager">
+      </div>
+      <div class="hero-float float-anim">
+        <span class="dot">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        </span>
+        <div><strong>Good choice — you stay safe.</strong><small>Every drill ends with a calm debrief, not a score.</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROBLEM ===== -->
+<section class="section problem">
+  <div class="wrap">
+    <span class="eyebrow rv">The problem</span>
+    <h2 class="rv">Everyone has seen one. Fewer can spot one.</h2>
+    <p class="lead rv">Students already know the rules. The gap is applying them in the five seconds a scam demands an answer — and generative AI is making the fakes harder to read.</p>
+    <div class="problem-grid rv">
+      <div class="stat">
+        <div class="num tnum">82%</div>
+        <div class="lab">of Australian secondary students have already seen a deepfake</div>
+        <div class="src">UNSW × Day of AI Australia, 2026</div>
+      </div>
+      <div class="stat">
+        <div class="num tnum">1 in 5</div>
+        <div class="lab">has shared one — a social cost, not just a financial one</div>
+        <div class="src">UNSW × Day of AI Australia, 2026</div>
+      </div>
+      <div class="stat">
+        <div class="num tnum">$85K+</div>
+        <div class="lab">lost to scams by under-18s so far this year, over half via buying &amp; selling</div>
+        <div class="src">ACCC Scamwatch, Aug 2026</div>
+      </div>
+      <div class="stat">
+        <div class="num down tnum">46% → 25%</div>
+        <div class="lab">teen deepfake-detection accuracy, 2025 → 2026 — fakes are winning</div>
+        <div class="src">Microsoft, 14,797 teens · 15 countries, Feb 2026</div>
+      </div>
+    </div>
+    <div class="problem-quote rv">
+      “How might we help students respond safely to cyber threats and build <strong>instinctive reflexes</strong> against digital deception — through practice scenarios, AI-assisted verification and guided recovery when something goes wrong?”
+      <br><span>Our guiding design question — and the brief for every feature below.</span>
+    </div>
+  </div>
+</section>
+<!-- ===== CORE FRAMEWORK ===== -->
+<section class="section framework rv" id="framework">
+  <div class="wrap">
+    <span class="eyebrow">Core product framework</span>
+    <h2>One build, three evidence-based stages</h2>
+    <p class="lead">Each pillar meets students at a different point of risk — and all three sit on one reviewed evidence layer, closing into a practice loop that builds reflexes over time.</p>
+
+    <div class="fw-loop" aria-hidden="true">
+      <span class="loop-pill">Practise</span><span class="loop-arrow">→</span>
+      <span class="loop-pill">Get a calm debrief</span><span class="loop-arrow">→</span>
+      <span class="loop-pill">See progress</span><span class="loop-arrow">↻</span>
+    </div>
+
+    <div class="fw-stage">
+      <div class="fw-connector" aria-hidden="true"></div>
+
+      <article class="pillar p1">
+        <div class="pico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#C06A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4L3 21l1.1-9A8.5 8.5 0 1 1 21 11.5Z"/><path d="m12 8-2.2 4h4.4L12 16"/></svg>
+        </div>
+        <div class="phase">Stage 01 · Before harm</div>
+        <h3>Breach Drills</h3>
+        <div class="when">Recognise · Decide under pressure</div>
+        <p>Realistic scam simulations for risk-free decision practice, inside the apps students actually use.</p>
+        <ul>
+          <li>SMS, Gmail, Instagram, WhatsApp &amp; social-post scenarios</li>
+          <li>Four reply choices, framed as “what would you really do?”</li>
+        </ul>
+      </article>
+
+      <article class="pillar p2">
+        <div class="pico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#0A7E7E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4m0 10v4M3 12h4m10 0h4"/><path d="m12 8 1.6 2.4L16 12l-2.4 1.6L12 16l-1.6-2.4L8 12l2.4-1.6L12 8Z"/><circle cx="19" cy="5" r="2.2"/></svg>
+        </div>
+        <div class="phase">Stage 02 · In the feed</div>
+        <h3>AI Reality Check</h3>
+        <div class="when">Judge real vs. generated</div>
+        <p>Interactive “spot the fake” challenges for AI-generated images and fabricated articles.</p>
+        <ul>
+          <li>Swipe genuine vs. AI images, with artefact-by-artefact clues</li>
+          <li>Compare two news stories; sources stay hidden until you commit</li>
+        </ul>
+      </article>
+
+      <article class="pillar p3">
+        <div class="pico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#174FC4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.4"/><path d="M12 3v2.6M12 18.4V21M3 12h2.6M18.4 12H21"/></svg>
+        </div>
+        <div class="phase">Stage 03 · After an incident</div>
+        <h3>Digital First Aid</h3>
+        <div class="when">Recover · Know who to contact</div>
+        <p>Calm, step-by-step response guidance and official reporting pathways for when something has already happened.</p>
+        <ul>
+          <li>Five incident paths, from scams to blackmail and leaked passwords</li>
+          <li>Checklists route students to banks, platforms and official help</li>
+        </ul>
+      </article>
+    </div>
+
+    <div class="fw-foundation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5Z"/><path d="M4 5.5V20.5"/><path d="M8 8h8M8 11.5h6"/></svg>
+      <div>
+        <strong>Evidence foundation — the Case Library &amp; Open-Data pipeline</strong>
+        <p>Every drill traces to a dated, reviewed Australian incident (Scamwatch, ACCC, CommBank, ABC News). No scenario ships without a real source behind it — and AI may only reword an approved base case, never change the safety lesson.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FEATURE WALKTHROUGH ===== -->
+<section class="section features" id="features">
+  <div class="wrap">
+    <span class="eyebrow">Inside the product</span>
+    <h2>Six connected experiences, one safe practice space</h2>
+    <p class="lead">A guided tour of the live Iteration 2 build — screenshots below are from the deployed application.</p>
+
+    <!-- 1 Personalisation -->
+    <div class="feature">
+      <div class="f-text rv">
+        <span class="f-tag" style="background:#EFEAFE;color:#5B3DD4">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg>
+          Personalisation
+        </span>
+        <h3>Your world. Your practice.</h3>
+        <p>Students pick the context closest to their life — changeable in one tap at any time. Drills and AI Reality Check content are matched to it, while the full archive stays browsable, because scams cross every context.</p>
+        <ul class="f-list">
+          <li><span class="tick" style="background:var(--teal)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span><strong>01 School</strong> — Maya, 17: school emails, portals and ticket apps</span></li>
+          <li><span class="tick" style="background:var(--purple)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span><strong>02 Gaming</strong> — Amir, 15: rewards, trades and player messages</span></li>
+          <li><span class="tick" style="background:var(--pink)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span><strong>03 Social &amp; Messaging</strong> — Sophie, 16: group chats and unexpected DMs</span></li>
+          <li><span class="tick" style="background:var(--blue)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span><strong>04 Technology &amp; AI</strong> — Dylan, 16: deepfakes and AI-generated phishing</span></li>
+        </ul>
+      </div>
+      <div class="f-shots rv">
+        <div class="shot main">
+          <div class="shot-bar"><i></i><i></i><i></i><u>onboarding/profile</u></div>
+          <img src="assets/onboarding.png" alt="Personalisation screen with four practice worlds" loading="lazy">
+        </div>
+      </div>
+    </div>
+
+    <!-- 2 Breach Drills -->
+    <div class="feature reverse">
+      <div class="f-text rv">
+        <span class="f-tag" style="background:#FDF1E0;color:#C06A0A">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4L3 21l1.1-9A8.5 8.5 0 1 1 21 11.5Z"/><path d="m12 8-2.2 4h4.4L12 16"/></svg>
+          Stage 01 · Breach Drills
+        </span>
+        <h3>Choose a reply before the scammer chooses for you</h3>
+        <p>Each drill opens a faithful replica of a messaging app, clearly labelled a training simulation with no real links. A “Pause before you act” moment presents four honest options — two unsafe, one safe, one bystander — with no obvious “correct answer” styling.</p>
+        <ul class="f-list">
+          <li><span class="tick" style="background:var(--amber)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Feedback tells the <strong>consequence story</strong>: <span class="verdict good">Good choice</span> or <span class="verdict risk">Worth a second look</span> — never “wrong”.</span></li>
+          <li><span class="tick" style="background:var(--amber)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>“Try other choices” lets students safely explore every outcome; “What this teaches” names the reflex.</span></li>
+          <li><span class="tick" style="background:var(--amber)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>AI-personalised variants reword an approved base case to match the student's world — the safety lesson is locked.</span></li>
+        </ul>
+      </div>
+      <div class="rv" style="display:grid;gap:16px">
+        <div class="shot">
+          <div class="shot-bar"><i></i><i></i><i></i><u>/drills — five practice channels</u></div>
+          <img src="assets/drills.png" alt="Breach Drills channel picker with SMS, Gmail, Instagram, WhatsApp and social posts" loading="lazy">
+        </div>
+        <div class="f-shots pair">
+          <div class="shot">
+            <div class="shot-bar"><i></i><i></i><i></i><u>Your response</u></div>
+            <img src="assets/drill-choices.png" alt="Drill response modal with four choices" loading="lazy">
+          </div>
+          <div class="shot">
+            <div class="shot-bar"><i></i><i></i><i></i><u>Debrief</u></div>
+            <img src="assets/drill-feedback.png" alt="Good choice debrief screen with consequence and lesson" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 Case Library -->
+    <div class="feature">
+      <div class="f-text rv">
+        <span class="f-tag" style="background:#EFEAFE;color:#5B3DD4">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5Z"/><path d="M4 5.5V20.5"/></svg>
+          Evidence foundation · Case Library
+        </span>
+        <h3>Real incidents, reviewed before release</h3>
+        <p>Nineteen dated Australian cases — pattern descriptions, trend reports and specific incidents — curated from Scamwatch, the ACCC, ASIC, CommBank and ABC News. Students filter by context, search the archive, and follow every case to its original source.</p>
+        <ul class="f-list">
+          <li><span class="tick" style="background:var(--purple)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span><strong>Grounded, not generic:</strong> each debrief and drill cites a real, clickable source.</span></li>
+          <li><span class="tick" style="background:var(--purple)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Cases unlock as practice progresses — a traceable case-file archive.</span></li>
+        </ul>
+      </div>
+      <div class="f-shots rv">
+        <div class="shot main">
+          <div class="shot-bar"><i></i><i></i><i></i><u>/case-library</u></div>
+          <img src="assets/case-library.png" alt="Case Library with context filters and reviewed real cases" loading="lazy">
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 AI Reality Check -->
+    <div class="feature reverse">
+      <div class="f-text rv">
+        <span class="f-tag" style="background:#DDF3F2;color:#0A7E7E">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          Stage 02 · AI Reality Check
+        </span>
+        <h3>Train the eye for generated content</h3>
+        <p>A swipe-card challenge asks students to judge six images as genuine or AI-generated — tap to zoom, guess freely, then receive a precise list of artefacts: blurred hands, chaotic hair, impossible reflections.</p>
+        <ul class="f-list">
+          <li><span class="tick" style="background:var(--teal)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span><strong>Article mode:</strong> compare two news stories and pick the genuine one; bylines and sources stay hidden until the verdict.</span></li>
+          <li><span class="tick" style="background:var(--teal)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>“Not sure? Have a guess — we'll show you why.” No penalty for looking.</span></li>
+        </ul>
+      </div>
+      <div class="f-shots rv">
+        <div class="shot main">
+          <div class="shot-bar"><i></i><i></i><i></i><u>/ai-check — images</u></div>
+          <img src="assets/ai-check.png" alt="AI Reality Check swipe card for images" loading="lazy">
+        </div>
+        <div class="shot sub left">
+          <div class="shot-bar"><i></i><i></i><i></i><u>articles</u></div>
+          <img src="assets/ai-articles.png" alt="AI Reality Check article comparison challenge" loading="lazy">
+        </div>
+      </div>
+    </div>
+
+    <!-- 5 Digital First Aid -->
+    <div class="feature">
+      <div class="f-text rv">
+        <span class="f-tag" style="background:#DFE9FE;color:#174FC4">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.4"/><path d="M12 3v2.6M12 18.4V21M3 12h2.6M18.4 12H21"/></svg>
+          Stage 03 · Digital First Aid
+        </span>
+        <h3>When it's already gone wrong, know exactly what to do</h3>
+        <p>The recovery path opens with “You are not in trouble.” Students pick what happened — scammed, blackmailed, leaked password, fake account, private content shared — and get an ordered, tickable checklist.</p>
+        <ul class="f-list">
+          <li><span class="tick" style="background:var(--blue)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Urgent-first ordering: contact the bank before anything else when money is involved.</span></li>
+          <li><span class="tick" style="background:var(--blue)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Official routes built in — <strong>Scamwatch, ReportCyber, IDCARE</strong> — plus tell-a-trusted-adult guidance. No free-text disclosure, no judgement.</span></li>
+        </ul>
+      </div>
+      <div class="f-shots rv">
+        <div class="shot main">
+          <div class="shot-bar"><i></i><i></i><i></i><u>/first-aid/got-scammed</u></div>
+          <img src="assets/first-aid.png" alt="Digital First Aid checklist for a scam incident" loading="lazy">
+        </div>
+      </div>
+    </div>
+
+    <!-- 6 Progress -->
+    <div class="feature reverse">
+      <div class="f-text rv">
+        <span class="f-tag" style="background:#F3E8FE;color:#8A3FD4">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-9"/><path d="M15 6h6v6"/></svg>
+          The loop · My Progress
+        </span>
+        <h3>Progress you can see — and feel</h3>
+        <p>A dashboard turns every attempt into evidence of growth: completion rings for drills and reality checks, a rolling accuracy score, peer percentile encouragement, and an accuracy-over-time chart.</p>
+        <ul class="f-list">
+          <li><span class="tick" style="background:var(--purple)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Every choice is logged per participant and powers the personalised journey and unlocked cases.</span></li>
+          <li><span class="tick" style="background:var(--purple)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Onboarding tours, dark mode and accessible, mobile-tested UI keep the door open for everyone.</span></li>
+        </ul>
+      </div>
+      <div class="f-shots rv">
+        <div class="shot main">
+          <div class="shot-bar"><i></i><i></i><i></i><u>/progress</u></div>
+          <img src="assets/progress.png" alt="My Progress dashboard with rings and accuracy chart" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ===== EVIDENCE ENGINE ===== -->
+<section class="section evidence rv" id="evidence">
+  <div class="wrap">
+    <span class="eyebrow">Evidence engine &amp; trust</span>
+    <h2>From a real Australian incident to a lesson in the app</h2>
+    <p class="lead">The content pipeline is the product's safety claim: nothing a student sees is invented from thin air, and nothing AI-generated reaches them unchecked.</p>
+
+    <div class="pipeline">
+      <div class="node">
+        <div class="nico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.7 3.8 9S14.5 18.4 12 21c-2.5-2.6-3.8-5.7-3.8-9S9.5 5.6 12 3Z"/></svg></div>
+        <h4>Open data</h4>
+        <p>Real, dated Australian sources — Scamwatch, ACCC, CommBank, ABC News</p>
+      </div>
+      <div class="node">
+        <div class="nico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.4 8 8 9 4.6-1 8-4 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></div>
+        <h4>Case file reviewed</h4>
+        <p>Source link, “why included” per persona, signed off before use</p>
+      </div>
+      <div class="node">
+        <div class="nico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8.5 8.5 0 0 1-9 8.4L3 21l1.1-9A8.5 8.5 0 1 1 21 12Z"/><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01"/></svg></div>
+        <h4>Scenario built</h4>
+        <p>Fictionalised, same tactic, four reply options; AI may only reword</p>
+      </div>
+      <div class="node">
+        <div class="nico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h14v16H5z"/><path d="M9 9h6M9 13h6M9 17h3"/></svg></div>
+        <h4>Attempt logged</h4>
+        <p>The student's real choice, stored per participant with minimal data</p>
+      </div>
+      <div class="node">
+        <div class="nico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5M4 19h16"/><path d="M8 16l3.5-4 3 2.5L19 8"/></svg></div>
+        <h4>Progress &amp; matching</h4>
+        <p>Rings, accuracy trend, unlocked cases and personalised next drills</p>
+      </div>
+    </div>
+
+    <div class="gate rv">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+      <div>
+        <strong>Quality gate — no drill exists without a reviewed source behind it.</strong>
+        <p>Iteration 1 shipped zero AI content; Iteration 2 introduces a controlled AI service that adapts context and wording from an approved base case only, with prompt guardrails and output validation. Release follows the same gate every time: GitHub feature branch → pull-request review → lint, tests &amp; dependency/secret scan → targeted penetration retest → deploy.</p>
+      </div>
+    </div>
+
+    <div class="tech-row rv">
+      <span class="tech-chip">React + Vite frontend</span>
+      <span class="tech-chip">FastAPI backend</span>
+      <span class="tech-chip">PostgreSQL data layer</span>
+      <span class="tech-chip">Controlled AI content service</span>
+      <span class="tech-chip">Participant-code access</span>
+      <span class="tech-chip">Minimal data collection</span>
+      <span class="tech-chip">Mobile tested · WCAG-conscious UI</span>
+      <span class="tech-chip">Deployed on Render</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== IMPACT ===== -->
+<section class="section impact rv" id="impact">
+  <div class="wrap">
+    <span class="eyebrow">Effect &amp; outcomes</span>
+    <h2>Practice is the premise — and the evidence supports it</h2>
+    <p class="lead">The UNSW × Day of AI Australia study found deepfake recognition improved after a structured intervention. BreachDrill turns that intervention into repeatable, trackable practice.</p>
+
+    <div class="impact-grid">
+      <div class="chart-card rv">
+        <h4>Accuracy over repeated practice</h4>
+        <p class="cap">Illustrative trend from the deployed app's My Progress chart — each student sees their own curve.</p>
+        <svg class="chart-svg" viewBox="0 0 520 250" role="img" aria-label="Line chart showing judgement accuracy starting near 50 percent and rising toward 65 percent across repeated practice sessions">
+          <defs>
+            <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#1E66F0" stop-opacity=".22"/>
+              <stop offset="100%" stop-color="#1E66F0" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <g stroke="#E2EAF8" stroke-width="1">
+            <line x1="46" y1="40" x2="500" y2="40"/>
+            <line x1="46" y1="90" x2="500" y2="90"/>
+            <line x1="46" y1="140" x2="500" y2="140"/>
+            <line x1="46" y1="190" x2="500" y2="190"/>
+          </g>
+          <g fill="#94A6C4" font-size="11" font-family="Source Sans 3, sans-serif" text-anchor="end">
+            <text x="40" y="44">100%</text><text x="40" y="94">75%</text><text x="40" y="144">50%</text><text x="40" y="194">25%</text>
+          </g>
+          <path class="chart-area" d="M50,178 L70,150 L88,96 L104,120 L128,150 L160,138 L200,132 L240,128 L280,120 L320,122 L360,112 L400,108 L440,110 L480,104 L480,190 L50,190 Z"/>
+          <path class="chart-line" d="M50,178 L70,150 L88,96 L104,120 L128,150 L160,138 L200,132 L240,128 L280,120 L320,122 L360,112 L400,108 L440,110 L480,104"/>
+          <circle class="chart-dot" cx="50" cy="178" r="5" fill="#fff" stroke="#1E66F0" stroke-width="3"/>
+          <circle class="chart-dot" cx="480" cy="104" r="6" fill="#1E66F0"/>
+          <text x="50" y="212" fill="#66758F" font-size="11" font-family="Source Sans 3, sans-serif">First attempts</text>
+          <text x="480" y="212" fill="#0E2A6B" font-size="11" font-weight="700" font-family="Source Sans 3, sans-serif" text-anchor="end">After practice · ~65%</text>
+        </svg>
+      </div>
+
+      <div class="outcome-list rv">
+        <div class="outcome">
+          <span class="obadge" style="background:#EFEAFE;color:#7A5AF8"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></span>
+          <div><h4>More relevant</h4><p>Four selectable profiles tailor drills and AI challenges to school, gaming, social and AI contexts.</p></div>
+        </div>
+        <div class="outcome">
+          <span class="obadge" style="background:#DDF3F2;color:#0BA6A6"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg></span>
+          <div><h4>More comprehensive</h4><p>Cross-context coverage across every area of teen life, from ticket scams to deepfakes and sextortion.</p></div>
+        </div>
+        <div class="outcome">
+          <span class="obadge" style="background:#FDF1E0;color:#C06A0A"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.4 8 8 9 4.6-1 8-4 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></span>
+          <div><h4>More credible</h4><p>Every lesson traces to a reviewed case file; every AI variation traces to an approved base case.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="impact-counts rv">
+      <div class="icount"><span class="n tnum">19</span><span class="l">reviewed Australian case files</span></div>
+      <div class="icount"><span class="n tnum">5</span><span class="l">practice channels in Breach Drills</span></div>
+      <div class="icount"><span class="n tnum">8</span><span class="l">AI Reality Check challenges (6 images + 2 articles)</span></div>
+      <div class="icount"><span class="n tnum">5</span><span class="l">Digital First Aid recovery paths</span></div>
+    </div>
+
+    <div class="sdg-row rv">
+      <div class="sdg"><span class="badge">16</span><div><b>UN SDG 16 · Peace, Justice &amp; Strong Institutions</b><span>Young people know how to report and where to turn.</span></div></div>
+      <div class="sdg"><span class="badge">9</span><div><b>UN SDG 9 · Industry, Innovation &amp; Infrastructure</b><span>A safer, more literate population builds resilient digital infrastructure.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div>
+        <h3>BreachDrill</h3>
+        <p>Practise safer choices online. A cyber-safety education platform that replaces fear and lectures with realistic, evidence-based practice for Australian secondary students.</p>
+        <a class="btn btn-primary" href="https://breachdrill-site.onrender.com/home" target="_blank" rel="noopener">Visit the live application
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+        </a>
+        <div class="footer-tags">
+          <span>Cybersecurity</span><span>AI-generated misinformation</span><span>Digital literacy</span>
+          <span>Evidence-based design</span><span>Human-centred design</span><span>Social good</span><span>UX/UI design</span>
+        </div>
+      </div>
+      <div>
+        <p style="color:#DCE7FF"><strong style="color:#fff;font-family:var(--font-display)">Pause · Verify · Report</strong></p>
+        <p style="margin-top:8px">Build safer habits one drill at a time.</p>
+      </div>
+    </div>
+    <div class="footer-meta">
+      <span>Team CypherHacks · FIT5120 Industry Experience Project · Monash University, 2026</span>
+      <span>Evidence: Scamwatch/ACCC · UNSW × Day of AI Australia · Microsoft · eSafety Commissioner · ASIC · CommBank · ABC News</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  document.body.classList.add('loaded');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) { document.querySelectorAll('.rv,.framework,.evidence,.impact').forEach(function(el){ el.classList.add('in'); }); return; }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, {threshold:0.18, rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.rv,.framework,.evidence,.impact').forEach(function(el){ io.observe(el); });
+})();
+</script>
+</body>
+</html>
